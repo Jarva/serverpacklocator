@@ -7,10 +7,10 @@ package net.forgecraft.serverpackutility;
 
 import com.mojang.authlib.GameProfile;
 import net.forgecraft.serverpacklocator.ModAccessor;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.server.ServerStartedEvent;
-import net.neoforged.neoforge.event.server.ServerStoppedEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.server.ServerStartedEvent;
+import net.minecraftforge.event.server.ServerStoppedEvent;
+import net.minecraftforge.fml.common.Mod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,8 +19,8 @@ public class UtilityMod {
     private static final Logger LOG = LoggerFactory.getLogger(UtilityMod.class);
 
     public UtilityMod() {
-        NeoForge.EVENT_BUS.addListener(this::onServerStart);
-        NeoForge.EVENT_BUS.addListener(this::onServerStop);
+        MinecraftForge.EVENT_BUS.addListener(this::onServerStart);
+        MinecraftForge.EVENT_BUS.addListener(this::onServerStop);
     }
 
     private void onServerStart(ServerStartedEvent startedEvent) {
@@ -34,7 +34,7 @@ public class UtilityMod {
                 return true;
             }
         }).join());
-        ModAccessor.setLogIps(server.logIPs());
+//        ModAccessor.setLogIps(server.logIPs());
     }
 
     private void onServerStop(ServerStoppedEvent stoppedEvent) {

@@ -1,5 +1,6 @@
 package net.forgecraft.serverpacklocator.secure;
 
+import com.mojang.authlib.exceptions.AuthenticationException;
 import com.mojang.authlib.minecraft.UserApiService;
 import com.mojang.authlib.yggdrasil.ServicesKeySet;
 import com.mojang.authlib.yggdrasil.ServicesKeyType;
@@ -14,7 +15,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpHeaders;
-import net.neoforged.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.Dist;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -125,7 +126,11 @@ public final class ProfileKeyPairBasedSecurityManager implements IConnectionSecu
         if (accessToken.isBlank())
             return UserApiService.OFFLINE;
 
-        return authenticationService.createUserApiService(accessToken);
+        try {
+            return authenticationService.createUserApiService(accessToken);
+        } catch(AuthenticationException e) {
+            return null;
+        }
     }
 
     private static KeyPairResponse getKeyPair() {
@@ -138,11 +143,11 @@ public final class ProfileKeyPairBasedSecurityManager implements IConnectionSecu
         if (keyPairResponse == null)
             return null;
 
-        return new ProfileKeyPair(Crypt.stringToPemRsaPrivateKey(keyPairResponse.keyPair().privateKey()),
+        return new ProfileKeyPair(Crypt.stringToPemRsaPrivateKey(keyPairResponse.getPrivateKey()),
                 new PublicKeyData(
-                Crypt.stringToRsaPublicKey(keyPairResponse.keyPair().publicKey()),
-                Instant.parse(keyPairResponse.expiresAt()),
-                keyPairResponse.publicKeySignature().array()));
+                Crypt.stringToRsaPublicKey(keyPairResponse.getPublicKey()),
+                Instant.parse(keyPairResponse.getExpiresAt()),
+                keyPairResponse.getPublicKeySignature().array()));
     }
 
     private static SigningHandler getSigningHandler() {
