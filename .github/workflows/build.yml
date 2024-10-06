@@ -1,12 +1,12 @@
 name: 'Build'
 
 on:
-  push:
-    branches:
-      - '**'
-  pull_request:
-    branches:
-      - '*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version"
+        required: true
+        type: string
 
 # Cancel outdated builds for the same branch
 concurrency:
@@ -52,16 +52,12 @@ jobs:
       - name: Remove utilmod before publication
         run: rm build/libs/serverpacklocator-*-utilmod.jar
 
-      - name: Get project version
-        id: get_version
-        run: ./gradlew configureGitHubActions
-
       # Auto-Release when pushed to main
       - name: Release
         uses: softprops/action-gh-release@v2
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         with:
-          tag_name: v${{ steps.get_version.outputs.version }}
+          tag_name: v${{ inputs.version }}
           files: build/libs/serverpacklocator-*.jar
           make_latest: true
           fail_on_unmatched_files: true
