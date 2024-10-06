@@ -22,6 +22,8 @@ version = "1.0.0" //gradleutils.version.toString()
 
 group = 'net.forgecraft.serverpacklocator'
 
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
 sourceSets {
     utilmod
 }
@@ -35,10 +37,7 @@ minecraft {
             workingDirectory project.file('runs/client')
 
             mods {
-                spl {
-                    source sourceSets.main
-                }
-                utilmod {
+                serverpacklocatorutility {
                     source sourceSets.utilmod
                 }
             }
@@ -48,10 +47,7 @@ minecraft {
             workingDirectory project.file('runs/server')
 
             mods {
-                spl {
-                    source sourceSets.main
-                }
-                utilmod {
+                serverpacklocatorutility {
                     source sourceSets.utilmod
                 }
             }
