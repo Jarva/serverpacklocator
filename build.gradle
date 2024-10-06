@@ -22,8 +22,6 @@ version = "1.0.0" //gradleutils.version.toString()
 
 group = 'net.forgecraft.serverpacklocator'
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-
 sourceSets {
     utilmod
 }
@@ -75,7 +73,7 @@ def copyUtilMod = tasks.register("copyUtilMod", Copy) {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(17)
     }
     withSourcesJar()
 }
